@@ -1189,9 +1189,34 @@
             
             <div class="card-cyber">
                 <div class="card-body-cyber">
-                    <div class="alert-cyber">
-                        <i class="fas fa-info-circle me-3"></i>
-                        Network visualization to be integrated with topology data.
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <button id="topo-refresh" class="btn-cyber btn-cyber-sm">
+                            <i class="fas fa-rotate me-2"></i>Refresh
+                        </button>
+                        <button id="topo-fit" class="btn-cyber btn-cyber-sm">
+                            <i class="fas fa-compress me-2"></i>Fit
+                        </button>
+                        <select id="topo-layout" class="form-select-cyber" style="width: 220px;">
+                            <option value="physics" selected>Physics (force)</option>
+                            <option value="hierarchical">Hierarchical</option>
+                        </select>
+                        <label class="form-label-cyber d-flex align-items-center" style="gap: 8px;">
+                            <input type="checkbox" id="topo-physics" checked> Physics
+                        </label>
+                        <label class="form-label-cyber d-flex align-items-center" style="gap: 8px;">
+                            <input type="checkbox" id="topo-show-labels" checked> Labels
+                        </label>
+                    </div>
+                    <div id="topology-canvas" class="chart-container-cyber" style="height: 520px;"></div>
+<div id="topo-status" class="mt-2" style="font-size: 12px; opacity: .8;">Source: <strong>Demo</strong> · Nodes: 0 · Links: 0</div>
+                    <div class="mt-3" style="display:flex; gap:.5rem; flex-wrap:wrap;">
+                        <span class="badge-cyber badge-info">Agent</span>
+                        <span class="badge-cyber badge-success">Server</span>
+                        <span class="badge-cyber badge-warning">Gateway</span>
+                        <span class="badge-cyber" style="background:#8A2BE2;color:#fff;">DB</span>
+                        <span class="badge-cyber" style="background:#76B900;color:#000;">Healthy</span>
+                        <span class="badge-cyber" style="background:#ffc107;color:#000;">Degraded</span>
+                        <span class="badge-cyber" style="background:#dc3545;color:#fff;">Down</span>
                     </div>
                 </div>
             </div>
@@ -1312,6 +1337,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
     <script>
         const tokenKey = 'CACTUS_token';
         function getToken(){ return localStorage.getItem(tokenKey); }
@@ -2805,5 +2831,211 @@
         }, 100);
     });
     </script>
+
+<script>
+// === NETWORK TOPOLOGY DEMO ===
+(function(){
+  let topoNetwork;
+  let topoData = { nodes: null, edges: null };
+
+  // --- DEMO DATA (always available) ---
+  const DEMO_TOPOLOGY = {
+    nodes: [
+      { id:'gw',   label:'Gateway',      type:'gateway', ip:'10.0.0.1' },
+      { id:'core', label:'Core Switch',  type:'switch' },
+      { id:'db',   label:'PostgreSQL',   type:'db', ip:'10.0.0.10' },
+      { id:'api',  label:'Kaktus API',   type:'server', ip:'10.0.0.20' },
+      { id:'siem', label:'SIEM',         type:'server', ip:'10.0.0.30' },
+      { id:'pc1',  label:'Tigran-PC',    type:'agent',  ip:'10.0.1.11', status:'healthy' },
+      { id:'pc2',  label:'Varduhi-PC',   type:'agent',  ip:'10.0.1.12', status:'degraded' },
+      { id:'pc3',  label:'Hayk-Laptop',  type:'agent',  ip:'10.0.1.13', status:'healthy' },
+      { id:'pc4',  label:'Vard-Work',    type:'agent',  ip:'10.0.1.14', status:'down' },
+      { id:'pc5',  label:'Agent-Office', type:'agent',  ip:'10.0.1.15', status:'healthy' }
+    ],
+    edges: [
+      { from:'gw', to:'core',    status:'healthy' },
+      { from:'core', to:'api',   status:'healthy' },
+      { from:'api', to:'db',     status:'healthy' },
+      { from:'core', to:'siem',  status:'healthy' },
+      { from:'core', to:'pc1',   status:'healthy' },
+      { from:'core', to:'pc2',   status:'degraded' },
+      { from:'core', to:'pc3',   status:'healthy' },
+      { from:'core', to:'pc4',   status:'down' },
+      { from:'core', to:'pc5',   status:'healthy' }
+    ]
+  };
+
+  function paletteByType(type){
+    switch(type){
+      case 'agent': return '#0dcaf0';
+      case 'server': return '#76B900';
+      case 'db': return '#8A2BE2';
+      case 'gateway': return '#ffc107';
+      case 'switch': return '#adb5bd';
+      default: return '#9fef00';
+    }
+  }
+  function edgeColor(status){
+    switch(status){
+      case 'down': return '#dc3545';
+      case 'degraded': return '#ffc107';
+      default: return '#76B900';
+    }
+  }
+  function setStatus(label, nodesCount, edgesCount){
+    const el = document.getElementById('topo-status');
+    if (!el) return;
+    el.innerHTML = `Source: <strong>${label}</strong> · Nodes: ${nodesCount} · Links: ${edgesCount}`;
+  }
+
+  // API fetchers (optional)
+  async function fetchTopologyFromAPI(){
+    try{
+      const t = await apiFetch('/api/network/topology');
+      if (t && Array.isArray(t.nodes) && Array.isArray(t.edges) && t.nodes.length) return t;
+    }catch(e){/* ignore */}
+    return null;
+  }
+  async function buildFallbackTopology(){
+    // If agents endpoint isn't available, just return DEMO
+    try{
+      const res = await apiFetch('/api/agents');
+      const agents = Array.isArray(res?.agents) ? res.agents.slice(0, 20) : [];
+      if (!agents.length) return DEMO_TOPOLOGY;
+      const nodes = [
+        { id:'gw',   label:'Gateway',     type:'gateway', ip:'10.0.0.1' },
+        { id:'core', label:'Core Switch', type:'switch' },
+        { id:'db',   label:'PostgreSQL',  type:'db', ip:'10.0.0.10' },
+        { id:'api',  label:'Kaktus API',  type:'server', ip:'10.0.0.20' },
+        { id:'siem', label:'SIEM',        type:'server', ip:'10.0.0.30' }
+      ];
+      const edges = [
+        { from:'gw', to:'core', status:'healthy' },
+        { from:'core', to:'api', status:'healthy' },
+        { from:'api', to:'db', status:'healthy' },
+        { from:'core', to:'siem', status:'healthy' }
+      ];
+      agents.forEach((a, idx)=>{
+        const id = a.agent_id || `agent_${idx}`;
+        nodes.push({ id, label: a.hostname || id, type:'agent', ip: a.ip, status: a.status || 'healthy' });
+        edges.push({ from:'core', to:id, status: (idx%7===2)?'degraded':((idx%11===3)?'down':'healthy') });
+      });
+      return { nodes, edges };
+    }catch(e){
+      return DEMO_TOPOLOGY;
+    }
+  }
+
+  function ensureNetwork(){
+    const container = document.getElementById('topology-canvas');
+    if (!container) return null;
+    if (!topoNetwork){
+      topoData = { nodes: new vis.DataSet([]), edges: new vis.DataSet([]) };
+      topoNetwork = new vis.Network(container, topoData, {
+        physics: { enabled: true, barnesHut: { gravitationalConstant: -30000, springLength: 150, avoidOverlap: 0.5 } },
+        layout: { improvedLayout: true },
+        interaction: { hover:true, tooltipDelay: 120 },
+        nodes: { shape:'dot', borderWidth:2, size: 18, font:{ color:'#fff', face: "'Exo 2', sans-serif", size: 14 }, color:{ border:'#000' } },
+        edges: { arrows:{ to:{ enabled:true, scaleFactor: 0.6 } }, color:{ color:'#76B900', highlight:'#89d400' }, width:2, smooth:{ type:'dynamic' } }
+      });
+      topoNetwork.on('click', (p)=>{
+        if (p.nodes.length){
+          const n = topoData.nodes.get(p.nodes[0]);
+          const info = { id:n.id, label:n.label, type:n.type, ip:n.ip||'N/A', status:n.status||'N/A' };
+          try { showOutputModal(`NODE ${n.id}`, JSON.stringify(info, null, 2)); } catch(_) {}
+        } else if (p.edges.length) {
+          const e = topoData.edges.get(p.edges[0]);
+          try { showOutputModal(`LINK ${e.from}→${e.to}`, JSON.stringify(e, null, 2)); } catch(_) {}
+        }
+      });
+    }
+    return topoNetwork;
+  }
+
+  function renderTopology(topo, sourceLabel='Demo'){
+    const net = ensureNetwork();
+    if (!net) return;
+    const nodes = topo.nodes.map(n => ({
+      id: n.id,
+      label: n.label || n.hostname || n.ip || String(n.id),
+      ip: n.ip,
+      type: n.type || 'server',
+      status: n.status || 'healthy',
+      color: { background: paletteByType(n.type), border: '#000' }
+    }));
+    const edges = topo.edges.map(e => ({
+      id: `${e.from}_${e.to}`,
+      from: e.from, to: e.to, label: e.label || '',
+      status: e.status || 'healthy',
+      color: { color: edgeColor(e.status), highlight: edgeColor(e.status) }
+    }));
+    topoData.nodes.clear(); topoData.edges.clear();
+    topoData.nodes.add(nodes);
+    topoData.edges.add(edges);
+    setStatus(sourceLabel, nodes.length, edges.length);
+  }
+
+  // Public loader used by the UI buttons
+  async function loadTopology(){
+    let topo = await fetchTopologyFromAPI();
+    if (topo) { renderTopology(topo, 'API'); return; }
+    topo = await buildFallbackTopology();
+    // If even fallback returned nothing (theoretically), use DEMO
+    if (!topo || !Array.isArray(topo.nodes) || topo.nodes.length === 0) topo = DEMO_TOPOLOGY;
+    renderTopology(topo, (topo===DEMO_TOPOLOGY)?'Demo':'Fallback');
+  }
+
+  // Seed DEMO immediately so there's always something visible
+  window.addEventListener('DOMContentLoaded', ()=>{
+    try { renderTopology(DEMO_TOPOLOGY, 'Demo'); } catch(e){ /* ignore */ }
+  });
+
+  // Expose for the wiring script
+  window.loadTopology = loadTopology;
+  window.__topoDemo = { renderTopology, DEMO_TOPOLOGY };
+})();
+</script>
+
+
+<script>
+(function(){
+  let wired = false;
+  function wire(){
+    if (wired) return;
+    wired = true;
+    document.getElementById('topo-refresh')?.addEventListener('click', loadTopology);
+    document.getElementById('topo-fit')?.addEventListener('click', ()=> topoNetwork && topoNetwork.fit({ animation:true }));
+    document.getElementById('topo-physics')?.addEventListener('change', (e)=> topoNetwork && topoNetwork.setOptions({ physics: { enabled: e.target.checked } }));
+    document.getElementById('topo-show-labels')?.addEventListener('change', (e)=>{
+      if (!topoData?.nodes) return;
+      topoData.nodes.get().forEach(n=> topoData.nodes.update({ id:n.id, font: { size: e.target.checked?14:0 } }));
+    });
+    document.getElementById('topo-layout')?.addEventListener('change', (e)=>{
+      if (!topoNetwork) return;
+      if (e.target.value === 'hierarchical'){
+        topoNetwork.setOptions({
+          layout: { hierarchical: { direction:'LR', levelSeparation: 180, nodeSpacing: 150 } },
+          physics: { enabled: false }
+        });
+      } else {
+        const physicsOn = !!document.getElementById('topo-physics')?.checked;
+        topoNetwork.setOptions({
+          layout: { hierarchical: false },
+          physics: { enabled: physicsOn }
+        });
+      }
+    });
+  }
+  // hook into tab nav
+  document.querySelectorAll('.tab-item').forEach(tab=>{
+    if (tab.getAttribute('data-section') === 'network'){
+      tab.addEventListener('click', ()=> { wire(); setTimeout(loadTopology, 0); });
+    }
+  });
+  // also init on DOM ready in case user already on tab
+  window.addEventListener('DOMContentLoaded', ()=> { wire(); setTimeout(loadTopology, 0); });
+})();
+</script>
+
 </body>
 </html>
