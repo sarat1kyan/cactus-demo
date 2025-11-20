@@ -1,109 +1,158 @@
-# CACTUS - Elite Forensics & Security Intelligence Platform
-
-![CACTUS Logo](https://img.shields.io/badge/CACTUS-Elite%20Forensics-blue?style=for-the-badge&logo=shield)
-
-An advanced, AI-powered digital forensics and security intelligence platform that transforms systems into impenetrable fortresses while conducting deep forensic analysis.
-
-## 🛡️ Core Features
-
-### AI-Powered Threat Detection
-- Machine learning algorithms for behavioral pattern analysis
-- Anomaly detection with real-time scoring
-- MITRE ATT&CK framework integration
-- Advanced behavioral analytics
-
-### Deep Forensics Engine
-- Comprehensive memory dump analysis
-- Network traffic forensics
-- File system artifact analysis
-- Process behavior monitoring
-- Timeline reconstruction
-
-### Cactus Defense System
-- Self-healing capabilities
-- Automated threat response
-- System integrity protection
-- Zero-downtime security updates
-
-### Threat Intelligence
-- VirusTotal integration (70+ antivirus engines)
-- Real-time threat feeds
-- IOC (Indicators of Compromise) management
-- Threat hunting automation
-
-### Compliance & Hardening
-- NIST Cybersecurity Framework
-- CIS Controls implementation
-- STIG compliance automation
-- Business continuity protection
-
-### Data Protection
-- Data Loss Prevention (DLP)
-- File Integrity Monitoring (FIM)
-- Tag-based protection system
-- Automated backup and recovery
-
-### Network Intelligence
-- Topology mapping
-- Network discovery
-- Communication flow analysis
-- Asset inventory management
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Python 3.9+
-- PostgreSQL 13+
-- Redis 6+
-- Docker (optional)
-
-## 📊 Web Console
-
-- **Dashboard**: Real-time threat monitoring
-- **Forensics**: Deep analysis tools
-- **Threat Intelligence**: IOC management
-- **Compliance**: Hardening controls
-- **Network**: Topology mapping
-- **Settings**: System configuration
-
-## 🏗️ Architecture
-
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Web Console   │    │  AI Engine      │    │  Forensics      │
-│   (FastAPI)     │◄──►│  (ML Models)    │◄──►│  Engine         │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         ▼                       ▼                       ▼
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│  Threat Intel   │    │  Defense System │    │  Compliance     │
-│  (VirusTotal)   │    │  (Self-Healing) │    │  (NIST/CIS)     │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         ▼                       ▼                       ▼
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│  DLP/FIM        │    │  Network        │    │  Real-time      │
-│  (Data Protect) │    │  Topology       │    │  Monitoring    │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-```
-
-## 🔒 Security Features
-
-- **Zero Trust Architecture**: Every component is verified
-- **Encrypted Communications**: End-to-end encryption
-- **Audit Logging**: Comprehensive activity tracking
-- **Role-Based Access**: Granular permissions
-- **API Security**: OAuth2 + JWT authentication
-
-## 📈 Monitoring & Analytics
-
-- Real-time dashboards
-- Threat trend analysis
-- Compliance reporting
-- Performance metrics
-- Custom alerts
-
+# CACTUS — Security Automation & Forensics Platform  
+![Status](https://img.shields.io/badge/status-active-success)
+![License](https://img.shields.io/badge/license-private-red)
+![Built_with](https://img.shields.io/badge/built%20with-Python-blue)
+![Security](https://img.shields.io/badge/focus-security-critical)
+![Compliance](https://img.shields.io/badge/compliance-ISO%20%7C%20NIST%20%7C%20CIS-orange)
 
 ---
 
-**CACTUS** - Transforming cybersecurity through elite forensics and AI-powered defense.
+## 🚀 What is CACTUS?
+
+**CACTUS** is an advanced **security automation and compliance platform** designed to **harden, monitor, and investigate** infrastructure in real time.  
+It ensures **24/7 compliance**, detects misconfigurations, identifies threats, performs deep forensics, and generates a real-time **infrastructure topology map** — all from a **single console**.
+
+---
+
+## 🔍 Primary Users
+
+| Role | Usage |
+|------|------|
+| SOC Analysts | Incident response & alert investigation |
+| Sysadmins | Hardening & configuration enforcement |
+| DevOps / SRE | Infrastructure insights & performance checks |
+| Forensic Analysts | Memory / PCAP analysis inside the same tool |
+| Enterprise Security Teams | Compliance & risk management |
+
+---
+
+## 💡 Core Vision & Value Proposition
+
+CACTUS exists because **traditional security tools are reactive** — **CACTUS is proactive and continuous.**
+
+| Problem Today | How CACTUS Solves It |
+|----------------|-----------------------------|
+| Compliance is static. Environments change constantly. | Continuous compliance engine with real-time checks |
+| Hardening is manual and inconsistent. | Automated, policy-driven hardening |
+| Security tools are fragmented. | Unified compliance, threats & forensics in one console |
+| Forensics requires separate tools. | Built-in memory & PCAP forensic analysis pipeline |
+| Low infrastructure visibility. | Real-time network topology & agent intelligence |
+
+> **Result:** CACTUS transforms infrastructure from *reactive* to **continuously secured, hardened, and auditable**.
+
+---
+
+## 🧠 Architecture Overview
+
+```
+                 ┌────────────────────────────┐
+                 │  Management Console (UI)   │
+                 └───────────────┬────────────┘
+                                 │
+      ┌──────────────────────────┼──────────────────────────────┐
+      │                          │                              │
+┌──────────────┐        ┌───────────────────┐        ┌─────────────────┐
+│ Backend Core │◄──────►│ Agents (Endpoints)│◄──────►│ Forensics Engine │
+└──────────────┘        └───────────────────┘        └─────────────────┘
+       │                          │
+       │                          ▼
+       │                  Network Topology Service
+       │                          │
+       ▼                          ▼
+ Alerting Engine        Compliance / Hardening Engine
+```
+
+---
+
+## 🧪 Features — MVP Scope
+
+| Feature | Description |
+|--------|-------------|
+| Dashboard | Live stats, alerts, system health |
+| Threat Management | File & URL scanner, threat table |
+| Forensics | Memory/PCAP upload & investigation |
+| Compliance Engine | ISO/NIST/CIS checks & summaries |
+| Network Topology | Real-time graph, node health |
+| Agents | Commands, sysinfo, terminal output |
+| Settings | Security JSON view & config |
+
+---
+
+## 🧭 Roadmap
+
+| Stage | Deliverable |
+|------|--------------|
+| MVP | Management Console (current focus) |
+| Stage 2 | Agent UI |
+| Stage 3 | AI anomaly detection & policy builder |
+| Stage 4 | Mobile SOC companion app |
+| Future | Cloud multi-tenancy & compliance reporting API |
+
+---
+
+## 🎨 UX & Design Guidelines
+
+| Aspect | Expectation |
+|--------|-------------|
+| Style | Professional enterprise UI — not Hollywood hacker |
+| Theme | Dark preferred, but accessible & clean |
+| Accessibility | WCAG AA minimum |
+| Typography | UI font + monospaced for terminal |
+| Responsiveness | Desktop-first, tablet-friendly |
+
+---
+
+## 🧪 Example User Flows
+
+### 🔎 Investigate an Alert  
+1. Dashboard → alert → forensic analysis → results & incident options.
+
+### 🚨 Run File Scan  
+1. Threats → upload file → progress → results → quarantine or allowlist.
+
+### 🖥 Agent Command Flow  
+1. Agents → sysinfo/processes/ping → result in terminal modal.
+
+---
+
+## 📡 API Endpoints (For Design Reference)
+
+| Endpoint | Purpose |
+|----------|---------|
+| `/api/dashboard/overview` | Dashboard statistics |
+| `/api/dashboard/alerts` | Alerts list |
+| `/api/threats/detected` | Threats overview |
+| `/api/agents` | Registered endpoints |
+| `/api/network/topology` | Infrastructure graph |
+| `/api/settings/security` | Compliance/security JSON |
+| `/api/auth/login` | Authentication |
+
+---
+
+## 🧾 Summary
+
+**CACTUS = One platform for everything enterprise security teams actually do**  
+✔ Hardening  
+✔ Compliance  
+✔ Forensics  
+✔ Threat detection  
+✔ Topology intelligence  
+✔ Agent-level control  
+
+> **Not reactive. Not static. Not fragmented.**  
+> **Secure + Investigate + Comply — Continuously.**
+
+---
+
+### 🔗 Project Status
+> MVP Management Console currently in progress. All UI requirements available in `demo.html`  
+> Next phase → Agent UI + extended policy builder.
+
+---
+
+## 📄 License
+Private – All rights reserved.
+
+---
+
+**Let’s build the future of security.**
