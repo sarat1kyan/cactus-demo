@@ -78,18 +78,6 @@ CACTUS exists because **traditional security tools are reactive** — **CACTUS i
 
 ---
 
-## 🧭 Roadmap
-
-| Stage | Deliverable |
-|------|--------------|
-| MVP | Management Console (current focus) |
-| Stage 2 | Agent UI |
-| Stage 3 | AI anomaly detection & policy builder |
-| Stage 4 | Mobile SOC companion app |
-| Future | Cloud multi-tenancy & compliance reporting API |
-
----
-
 ## 🎨 UX & Design Guidelines
 
 | Aspect | Expectation |
@@ -145,8 +133,10 @@ CACTUS exists because **traditional security tools are reactive** — **CACTUS i
 ---
 
 ### 🔗 Project Status
+
+> 
 > MVP Management Console currently in progress. All UI requirements available in `demo.html`  
-> Next phase → Agent UI + extended policy builder.
+> Next phase → Agent UI
 
 ---
 
