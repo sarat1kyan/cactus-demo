@@ -98,73 +98,6 @@ Unlike traditional security tools that operate in silos, CACTUS unifies **threat
 - **PostgreSQL 13+** (or Docker)
 - **Redis 6+** (optional, for caching)
 
-### Installation
-
-#### 🐧 Linux / macOS
-```bash
-# Clone the repository
-git clone https://github.com/your-org/CACTUS.git
-cd CACTUS
-
-# Run installation script
-chmod +x install.sh
-./install.sh
-```
-
-#### 🪟 Windows
-```powershell
-# Clone the repository
-git clone https://github.com/your-org/CACTUS.git
-cd CACTUS
-
-# Run installation script
-.\install.ps1
-```
-
-#### 🐳 Docker (Recommended)
-```bash
-# Copy environment file
-cp env.example .env
-# Edit .env with your settings
-
-# Start all services
-docker compose up -d
-
-# Initialize database
-docker compose exec CACTUS alembic upgrade head
-
-# Create admin user
-docker compose exec CACTUS python scripts/create_admin_user.py
-```
-
-### First Run
-
-1. **Activate virtual environment:**
-   ```bash
-   # Linux/macOS
-   source venv/bin/activate
-   
-   # Windows
-   .\venv\Scripts\Activate.ps1
-   ```
-
-2. **Start the application:**
-   ```bash
-   python -m CACTUS.main
-   ```
-
-3. **Access the platform:**
-   - Web Interface: http://localhost:8000
-   - API Documentation: http://localhost:8000/api/docs
-   - Health Check: http://localhost:8000/health
-
-4. **Login:**
-   - Default credentials (change immediately!):
-     - Username: `admin`
-     - Password: `admin` (or the password you set during installation)
-
----
-
 ## 📖 Documentation
 
 | Document | Description |
@@ -324,59 +257,6 @@ docker compose exec CACTUS python scripts/create_admin_user.py
 
 **Full API Documentation:** http://localhost:8000/api/docs
 
----
-
-## 🧪 Development
-
-### Setup Development Environment
-
-```bash
-# Clone repository
-git clone https://github.com/your-org/CACTUS.git
-cd CACTUS
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # Windows: .\venv\Scripts\Activate.ps1
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Install development dependencies
-pip install pytest pytest-asyncio black flake8 mypy
-
-# Setup pre-commit hooks
-pre-commit install
-```
-
-### Running Tests
-
-```bash
-# Run all tests
-pytest
-
-# Run with coverage
-pytest --cov=CACTUS --cov-report=html
-
-# Run specific test file
-pytest tests/test_auth.py
-```
-
-### Code Quality
-
-```bash
-# Format code
-black CACTUS/
-
-# Lint code
-flake8 CACTUS/
-
-# Type checking
-mypy CACTUS/
-```
-
----
-
 ## 🚢 Deployment
 
 ### Production Deployment Options
@@ -419,28 +299,6 @@ mypy CACTUS/
 - **🧪 Testability** - Test suite, CI/CD ready, code quality tools
 
 See [IMPROVEMENTS_SUMMARY.md](IMPROVEMENTS_SUMMARY.md) for complete details.
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our contributing guidelines:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Development Guidelines
-
-- Follow PEP 8 style guide
-- Write tests for new features
-- Update documentation
-- Ensure all tests pass
-- Run code quality checks
-
----
 
 ## 📋 Roadmap
 
@@ -489,19 +347,11 @@ This software is proprietary and confidential. Unauthorized copying, distributio
 
 ---
 
-## 📞 Support
-
-- **Documentation:** [INSTALLATION.md](INSTALLATION.md) | [DEPLOYMENT.md](DEPLOYMENT.md)
-- **Issues:** [GitHub Issues](https://github.com/your-org/CACTUS/issues)
-- **Security:** security@CACTUS.local
-
----
-
 <div align="center">
 
 **Built with ❤️ for Security Professionals**
 
-[⭐ Star us on GitHub](https://github.com/your-org/CACTUS) • [📖 Documentation](INSTALLATION.md) • [🚀 Get Started](#-quick-start)
+[⭐ My LinkedIn](https://www.linkedin.com/in/saratikyan/) • [📖 Documentation](INSTALLATION.md) • [🚀 Get Started](#-quick-start)
 
 ---
 
