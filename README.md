@@ -122,7 +122,7 @@ Unlike traditional security tools that operate in silos, CACTUS unifies **threat
 ┌───────▼────────┐  ┌───────▼───────┐  ┌────────▼─────────┐
 │  FastAPI Core  │  │  API Gateway  │  │  WebSocket API   │
 │   (REST API)   │  │  (Rate Limit) │  │  (Real-time)     │
-└───────┬────────┘  └───────┬───────┘  └───────┬──────────┘
+└───────┬────────┘  └───────┬───────┘  └────────┬─────────┘
         │                   │                   │
         └───────────────────┼───────────────────┘
                             │
@@ -131,7 +131,7 @@ Unlike traditional security tools that operate in silos, CACTUS unifies **threat
 ┌───────▼────────┐  ┌───────▼───────┐  ┌────────▼─────────┐
 │  AI Engine     │  │  Forensics    │  │  Defense System  │
 │  (ML Models)   │  │  Engine       │  │  (Self-Healing)  │
-└───────┬────────┘  └───────┬───────┘  └───────┬──────────┘
+└───────┬────────┘  └───────┬───────┘  └────────┬─────────┘
         │                   │                   │
         └───────────────────┼───────────────────┘
                             │
