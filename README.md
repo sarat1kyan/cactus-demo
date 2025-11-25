@@ -93,10 +93,19 @@ Unlike traditional security tools that operate in silos, CACTUS unifies **threat
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- **Python 3.9+**
-- **PostgreSQL 13+** (or Docker)
-- **Redis 6+** (optional, for caching)
+### System Requirements
+- **Operating System**: Linux (Ubuntu 20.04+ recommended) or Windows Server 2019+
+- **CPU**: 8+ cores (16+ recommended for production)
+- **RAM**: 32GB+ (64GB+ recommended for production)
+- **Storage**: 500GB+ SSD (1TB+ recommended for production)
+- **Network**: 1Gbps+ connection
+
+### Software Requirements
+- **Python**: 3.9+
+- **PostgreSQL**: 13+
+- **Redis**: 6+
+- **Docker**: 20.10+ (optional)
+- **Node.js**: 16+ (for web console)
 
 ## 📖 Documentation
 
