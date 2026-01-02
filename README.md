@@ -1,4 +1,4 @@
-# 🌵 CACTUS - Enterprise Security Platform
+# 🌵 CACTUS - Enterprise Security Platform / Hardened by Design
 
 <div align="center">
 
