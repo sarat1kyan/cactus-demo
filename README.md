@@ -1,6 +1,7 @@
+<div align="center">
+
 # 🌵 CACTUS - Enterprise Security Platform / Hardened by Design
 
-<div align="center">
 
 ### *AI-Powered Threat Detection • Digital Forensics • Compliance • Network Intelligence*
 
